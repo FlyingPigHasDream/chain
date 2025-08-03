@@ -1,0 +1,18 @@
+server:
+  port: "8080"
+  host: "0.0.0.0"
+
+chain:
+  rpc_url: "https://sepolia.infura.io/v3/demo"
+  private_key: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+  chain_id: 11155111
+  gas_limit: 21000
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "password"
+  dbname: "chain_db"
+
+log_level: "info"

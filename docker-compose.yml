@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  chain-service:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - HOST=0.0.0.0
+      - LOG_LEVEL=info
+      - CHAIN_RPC_URL=https://mainnet.infura.io/v3/your-project-id
+      - CHAIN_PRIVATE_KEY=your-private-key-here
+      - CHAIN_ID=1
+      - GAS_LIMIT=21000
+    volumes:
+      - ./configs:/root/configs
+    restart: unless-stopped
+
+  # 可选：添加数据库服务
+  # postgres:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_DB: chain_db
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: password
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+# volumes:
+#   postgres_data:
