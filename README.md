@@ -5,11 +5,16 @@
 ## 功能特性
 
 - 🔗 支持以太坊及其兼容链
+- 🌟 **BSC链专项支持**
 - 💰 账户余额查询
 - 💸 代币转账功能
 - 📋 交易信息查询
 - 📜 智能合约调用
 - 🚀 智能合约部署
+- 💎 **BSC代币价格查询**
+- 🏊 **流动性池信息查询**
+- 🔍 **代币搜索功能**
+- 📊 **PancakeSwap集成**
 - 🐳 Docker容器化支持
 - 📊 结构化日志记录
 - ⚙️ 灵活的配置管理
@@ -92,49 +97,86 @@ make compose-up
 GET /health
 ```
 
-### 获取账户余额
+### 基础链功能
+
+#### 获取账户余额
 ```bash
 GET /api/v1/chain/balance/{address}
 ```
 
-### 转账
+#### 代币转账
 ```bash
 POST /api/v1/chain/transfer
-Content-Type: application/json
-
 {
-  "to": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b",
-  "amount": "0.1"
+  "to": "0x...",
+  "amount": "1000000000000000000"
 }
 ```
 
-### 查询交易
+#### 查询交易信息
 ```bash
 GET /api/v1/chain/transaction/{hash}
 ```
 
-### 调用智能合约
+#### 调用智能合约
 ```bash
 POST /api/v1/chain/contract/call
-Content-Type: application/json
-
 {
   "contract_address": "0x...",
-  "method_name": "balanceOf",
+  "method": "balanceOf",
   "params": ["0x..."]
 }
 ```
 
-### 部署智能合约
+#### 部署智能合约
 ```bash
 POST /api/v1/chain/contract/deploy
-Content-Type: application/json
-
 {
   "bytecode": "0x608060405234801561001057600080fd5b50...",
-  "abi": "[{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
-  "params": []
+  "constructor_params": []
 }
+```
+
+### BSC专项功能
+
+#### 获取代币信息
+```bash
+GET /api/v1/bsc/token/info/{address}
+```
+
+#### 通过名称搜索代币
+```bash
+GET /api/v1/bsc/token/search/{name}
+```
+
+#### 获取代币价格（通过地址）
+```bash
+GET /api/v1/bsc/token/price/{address}
+```
+
+#### 获取代币价格（通过地址和名称）
+```bash
+POST /api/v1/bsc/token/price
+{
+  "address": "0xbb4CdB9CBd36B01bD1cBaeBF2De08d9173bc095c",
+  "token_name": "WBNB"
+}
+```
+
+#### 批量获取代币价格
+```bash
+POST /api/v1/bsc/tokens/prices
+{
+  "tokens": [
+    {"address": "0xbb4CdB9CBd36B01bD1cBaeBF2De08d9173bc095c"},
+    {"address": "0x55d398326f99059fF775485246999027B3197955"}
+  ]
+}
+```
+
+#### 获取流动性池信息
+```bash
+GET /api/v1/bsc/liquidity/{token0}/{token1}
 ```
 
 ## 开发指南

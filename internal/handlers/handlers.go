@@ -43,6 +43,9 @@ func RegisterRoutes(router *gin.Engine, cfg *config.Config) {
 			chain.POST("/contract/deploy", chainHandler.DeployContract)
 		}
 	}
+
+	// 注册BSC相关路由
+	RegisterBSCRoutes(router, cfg)
 }
 
 // healthCheck 健康检查

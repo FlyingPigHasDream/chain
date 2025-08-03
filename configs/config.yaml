@@ -1,11 +1,12 @@
 server:
   port: "8080"
+  grpc_port: "9090"
   host: "0.0.0.0"
 
 chain:
-  rpc_url: "https://sepolia.infura.io/v3/demo"
+  rpc_url: "https://bsc-dataseed1.binance.org/"
   private_key: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
-  chain_id: 11155111
+  chain_id: 56
   gas_limit: 21000
 
 database:

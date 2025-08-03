@@ -5,11 +5,19 @@ APP_NAME=chain-service
 
 # 构建应用
 build:
-	go build -o bin/$(APP_NAME) cmd/main.go
+	go build -o bin/chain-service cmd/main.go
 
-# 运行应用
+# 构建gRPC服务
+build-grpc:
+	go build -o bin/chain-grpc-service cmd/grpc_server.go
+
+# 运行HTTP服务
 run:
 	go run cmd/main.go
+
+# 运行gRPC服务
+run-grpc:
+	go run cmd/grpc_server.go
 
 # 运行测试
 test:
@@ -59,6 +67,18 @@ dev:
 # 安装开发工具
 install-tools:
 	go install github.com/cosmtrek/air@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+# 生成protobuf代码
+proto-gen:
+	export PATH=$$PATH:$$(go env GOPATH)/bin && protoc --go_out=. --go-grpc_out=. proto/chain_service.proto
+
+# 测试gRPC客户端
+test-grpc-client:
+	go run examples/grpc_client.go
 
 # 生成API文档
 docs:

@@ -1,0 +1,211 @@
+syntax = "proto3";
+
+package chain;
+
+option go_package = "chain/proto";
+
+// 链服务定义
+service ChainService {
+  // 获取账户余额
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+  
+  // 代币转账
+  rpc Transfer(TransferRequest) returns (TransferResponse);
+  
+  // 获取交易信息
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+  
+  // 调用智能合约
+  rpc CallContract(CallContractRequest) returns (CallContractResponse);
+  
+  // 部署智能合约
+  rpc DeployContract(DeployContractRequest) returns (DeployContractResponse);
+}
+
+// BSC服务定义
+service BSCService {
+  // 获取代币信息
+  rpc GetTokenInfo(GetTokenInfoRequest) returns (GetTokenInfoResponse);
+  
+  // 搜索代币
+  rpc SearchToken(SearchTokenRequest) returns (SearchTokenResponse);
+  
+  // 获取代币价格
+  rpc GetTokenPrice(GetTokenPriceRequest) returns (GetTokenPriceResponse);
+  
+  // 批量获取代币价格
+  rpc GetMultipleTokenPrices(GetMultipleTokenPricesRequest) returns (GetMultipleTokenPricesResponse);
+  
+  // 获取流动性池信息
+  rpc GetLiquidityPool(GetLiquidityPoolRequest) returns (GetLiquidityPoolResponse);
+}
+
+// 健康检查服务
+service HealthService {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+// 请求和响应消息定义
+
+// 健康检查
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string status = 1;
+  string message = 2;
+}
+
+// 获取余额
+message GetBalanceRequest {
+  string address = 1;
+}
+
+message GetBalanceResponse {
+  string balance = 1;
+  string address = 2;
+  bool success = 3;
+  string error = 4;
+}
+
+// 转账
+message TransferRequest {
+  string to = 1;
+  string amount = 2;
+}
+
+message TransferResponse {
+  string transaction_hash = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+// 获取交易
+message GetTransactionRequest {
+  string hash = 1;
+}
+
+message GetTransactionResponse {
+  string hash = 1;
+  string from = 2;
+  string to = 3;
+  string value = 4;
+  uint64 gas_used = 5;
+  string gas_price = 6;
+  uint64 block_number = 7;
+  string status = 8;
+  bool success = 9;
+  string error = 10;
+}
+
+// 调用合约
+message CallContractRequest {
+  string contract_address = 1;
+  string method = 2;
+  repeated string params = 3;
+}
+
+message CallContractResponse {
+  string result = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+// 部署合约
+message DeployContractRequest {
+  string bytecode = 1;
+  repeated string constructor_params = 2;
+}
+
+message DeployContractResponse {
+  string contract_address = 1;
+  string transaction_hash = 2;
+  bool success = 3;
+  string error = 4;
+}
+
+// BSC代币信息
+message GetTokenInfoRequest {
+  string address = 1;
+}
+
+message TokenInfo {
+  string address = 1;
+  string name = 2;
+  string symbol = 3;
+  uint32 decimals = 4;
+  string total_supply = 5;
+}
+
+message GetTokenInfoResponse {
+  TokenInfo token = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+// 搜索代币
+message SearchTokenRequest {
+  string name = 1;
+}
+
+message SearchTokenResponse {
+  repeated TokenInfo tokens = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+// 获取代币价格
+message GetTokenPriceRequest {
+  string address = 1;
+  string token_name = 2;
+}
+
+message TokenPrice {
+  string address = 1;
+  string name = 2;
+  string symbol = 3;
+  string price_usd = 4;
+  string price_bnb = 5;
+}
+
+message GetTokenPriceResponse {
+  TokenPrice price = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+// 批量获取代币价格
+message TokenRequest {
+  string address = 1;
+  string name = 2;
+}
+
+message GetMultipleTokenPricesRequest {
+  repeated TokenRequest tokens = 1;
+}
+
+message GetMultipleTokenPricesResponse {
+  repeated TokenPrice prices = 1;
+  bool success = 2;
+  string error = 3;
+}
+
+// 获取流动性池
+message GetLiquidityPoolRequest {
+  string token0 = 1;
+  string token1 = 2;
+}
+
+message LiquidityPool {
+  string pair_address = 1;
+  string token0 = 2;
+  string token1 = 3;
+  string reserve0 = 4;
+  string reserve1 = 5;
+  string total_liquidity = 6;
+}
+
+message GetLiquidityPoolResponse {
+  LiquidityPool pool = 1;
+  bool success = 2;
+  string error = 3;
+}

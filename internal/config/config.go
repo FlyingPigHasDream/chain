@@ -17,8 +17,9 @@ type Config struct {
 
 // ServerConfig 服务器配置
 type ServerConfig struct {
-	Port string `mapstructure:"port"`
-	Host string `mapstructure:"host"`
+	Port     string `mapstructure:"port" json:"port"`
+	GRPCPort string `mapstructure:"grpc_port" json:"grpc_port"`
+	Host     string `mapstructure:"host" json:"host"`
 }
 
 // ChainConfig 区块链配置
