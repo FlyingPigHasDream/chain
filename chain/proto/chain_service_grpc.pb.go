@@ -659,3 +659,261 @@ var HealthService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/chain_service.proto",
 }
+
+const (
+	PriceService_GetCryptoPrice_FullMethodName          = "/chain.PriceService/GetCryptoPrice"
+	PriceService_GetMultipleCryptoPrices_FullMethodName = "/chain.PriceService/GetMultipleCryptoPrices"
+	PriceService_GetTopCryptoPrices_FullMethodName      = "/chain.PriceService/GetTopCryptoPrices"
+	PriceService_SearchCrypto_FullMethodName            = "/chain.PriceService/SearchCrypto"
+	PriceService_GetPriceHistory_FullMethodName         = "/chain.PriceService/GetPriceHistory"
+)
+
+// PriceServiceClient is the client API for PriceService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// 价格服务
+type PriceServiceClient interface {
+	GetCryptoPrice(ctx context.Context, in *GetCryptoPriceRequest, opts ...grpc.CallOption) (*GetCryptoPriceResponse, error)
+	GetMultipleCryptoPrices(ctx context.Context, in *GetMultipleCryptoPricesRequest, opts ...grpc.CallOption) (*GetMultipleCryptoPricesResponse, error)
+	GetTopCryptoPrices(ctx context.Context, in *GetTopCryptoPricesRequest, opts ...grpc.CallOption) (*GetTopCryptoPricesResponse, error)
+	SearchCrypto(ctx context.Context, in *SearchCryptoRequest, opts ...grpc.CallOption) (*SearchCryptoResponse, error)
+	GetPriceHistory(ctx context.Context, in *GetPriceHistoryRequest, opts ...grpc.CallOption) (*GetPriceHistoryResponse, error)
+}
+
+type priceServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPriceServiceClient(cc grpc.ClientConnInterface) PriceServiceClient {
+	return &priceServiceClient{cc}
+}
+
+func (c *priceServiceClient) GetCryptoPrice(ctx context.Context, in *GetCryptoPriceRequest, opts ...grpc.CallOption) (*GetCryptoPriceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCryptoPriceResponse)
+	err := c.cc.Invoke(ctx, PriceService_GetCryptoPrice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *priceServiceClient) GetMultipleCryptoPrices(ctx context.Context, in *GetMultipleCryptoPricesRequest, opts ...grpc.CallOption) (*GetMultipleCryptoPricesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMultipleCryptoPricesResponse)
+	err := c.cc.Invoke(ctx, PriceService_GetMultipleCryptoPrices_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *priceServiceClient) GetTopCryptoPrices(ctx context.Context, in *GetTopCryptoPricesRequest, opts ...grpc.CallOption) (*GetTopCryptoPricesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTopCryptoPricesResponse)
+	err := c.cc.Invoke(ctx, PriceService_GetTopCryptoPrices_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *priceServiceClient) SearchCrypto(ctx context.Context, in *SearchCryptoRequest, opts ...grpc.CallOption) (*SearchCryptoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchCryptoResponse)
+	err := c.cc.Invoke(ctx, PriceService_SearchCrypto_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *priceServiceClient) GetPriceHistory(ctx context.Context, in *GetPriceHistoryRequest, opts ...grpc.CallOption) (*GetPriceHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPriceHistoryResponse)
+	err := c.cc.Invoke(ctx, PriceService_GetPriceHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PriceServiceServer is the server API for PriceService service.
+// All implementations must embed UnimplementedPriceServiceServer
+// for forward compatibility.
+//
+// 价格服务
+type PriceServiceServer interface {
+	GetCryptoPrice(context.Context, *GetCryptoPriceRequest) (*GetCryptoPriceResponse, error)
+	GetMultipleCryptoPrices(context.Context, *GetMultipleCryptoPricesRequest) (*GetMultipleCryptoPricesResponse, error)
+	GetTopCryptoPrices(context.Context, *GetTopCryptoPricesRequest) (*GetTopCryptoPricesResponse, error)
+	SearchCrypto(context.Context, *SearchCryptoRequest) (*SearchCryptoResponse, error)
+	GetPriceHistory(context.Context, *GetPriceHistoryRequest) (*GetPriceHistoryResponse, error)
+	mustEmbedUnimplementedPriceServiceServer()
+}
+
+// UnimplementedPriceServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPriceServiceServer struct{}
+
+func (UnimplementedPriceServiceServer) GetCryptoPrice(context.Context, *GetCryptoPriceRequest) (*GetCryptoPriceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCryptoPrice not implemented")
+}
+func (UnimplementedPriceServiceServer) GetMultipleCryptoPrices(context.Context, *GetMultipleCryptoPricesRequest) (*GetMultipleCryptoPricesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMultipleCryptoPrices not implemented")
+}
+func (UnimplementedPriceServiceServer) GetTopCryptoPrices(context.Context, *GetTopCryptoPricesRequest) (*GetTopCryptoPricesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTopCryptoPrices not implemented")
+}
+func (UnimplementedPriceServiceServer) SearchCrypto(context.Context, *SearchCryptoRequest) (*SearchCryptoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchCrypto not implemented")
+}
+func (UnimplementedPriceServiceServer) GetPriceHistory(context.Context, *GetPriceHistoryRequest) (*GetPriceHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPriceHistory not implemented")
+}
+func (UnimplementedPriceServiceServer) mustEmbedUnimplementedPriceServiceServer() {}
+func (UnimplementedPriceServiceServer) testEmbeddedByValue()                      {}
+
+// UnsafePriceServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PriceServiceServer will
+// result in compilation errors.
+type UnsafePriceServiceServer interface {
+	mustEmbedUnimplementedPriceServiceServer()
+}
+
+func RegisterPriceServiceServer(s grpc.ServiceRegistrar, srv PriceServiceServer) {
+	// If the following call pancis, it indicates UnimplementedPriceServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PriceService_ServiceDesc, srv)
+}
+
+func _PriceService_GetCryptoPrice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCryptoPriceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PriceServiceServer).GetCryptoPrice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PriceService_GetCryptoPrice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PriceServiceServer).GetCryptoPrice(ctx, req.(*GetCryptoPriceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PriceService_GetMultipleCryptoPrices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMultipleCryptoPricesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PriceServiceServer).GetMultipleCryptoPrices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PriceService_GetMultipleCryptoPrices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PriceServiceServer).GetMultipleCryptoPrices(ctx, req.(*GetMultipleCryptoPricesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PriceService_GetTopCryptoPrices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTopCryptoPricesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PriceServiceServer).GetTopCryptoPrices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PriceService_GetTopCryptoPrices_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PriceServiceServer).GetTopCryptoPrices(ctx, req.(*GetTopCryptoPricesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PriceService_SearchCrypto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchCryptoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PriceServiceServer).SearchCrypto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PriceService_SearchCrypto_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PriceServiceServer).SearchCrypto(ctx, req.(*SearchCryptoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PriceService_GetPriceHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPriceHistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PriceServiceServer).GetPriceHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PriceService_GetPriceHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PriceServiceServer).GetPriceHistory(ctx, req.(*GetPriceHistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PriceService_ServiceDesc is the grpc.ServiceDesc for PriceService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PriceService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "chain.PriceService",
+	HandlerType: (*PriceServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCryptoPrice",
+			Handler:    _PriceService_GetCryptoPrice_Handler,
+		},
+		{
+			MethodName: "GetMultipleCryptoPrices",
+			Handler:    _PriceService_GetMultipleCryptoPrices_Handler,
+		},
+		{
+			MethodName: "GetTopCryptoPrices",
+			Handler:    _PriceService_GetTopCryptoPrices_Handler,
+		},
+		{
+			MethodName: "SearchCrypto",
+			Handler:    _PriceService_SearchCrypto_Handler,
+		},
+		{
+			MethodName: "GetPriceHistory",
+			Handler:    _PriceService_GetPriceHistory_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/chain_service.proto",
+}

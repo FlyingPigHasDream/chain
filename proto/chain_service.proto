@@ -45,6 +45,15 @@ service HealthService {
   rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
 }
 
+// 价格服务
+service PriceService {
+  rpc GetCryptoPrice(GetCryptoPriceRequest) returns (GetCryptoPriceResponse);
+  rpc GetMultipleCryptoPrices(GetMultipleCryptoPricesRequest) returns (GetMultipleCryptoPricesResponse);
+  rpc GetTopCryptoPrices(GetTopCryptoPricesRequest) returns (GetTopCryptoPricesResponse);
+  rpc SearchCrypto(SearchCryptoRequest) returns (SearchCryptoResponse);
+  rpc GetPriceHistory(GetPriceHistoryRequest) returns (GetPriceHistoryResponse);
+}
+
 // 请求和响应消息定义
 
 // 健康检查
@@ -199,9 +208,70 @@ message LiquidityPool {
   string pair_address = 1;
   string token0 = 2;
   string token1 = 3;
-  string reserve0 = 4;
-  string reserve1 = 5;
-  string total_liquidity = 6;
+  string total_liquidity = 4;
+}
+
+// 价格服务消息
+message CryptoPriceInfo {
+  string symbol = 1;
+  string name = 2;
+  double current_price = 3;
+  double market_cap = 4;
+  double volume_24h = 5;
+  double price_change_24h = 6;
+  double price_change_percent_24h = 7;
+  string last_updated = 8;
+}
+
+message GetCryptoPriceRequest {
+  string symbol = 1;
+}
+
+message GetCryptoPriceResponse {
+  bool success = 1;
+  string error = 2;
+  CryptoPriceInfo price = 3;
+}
+
+message GetMultipleCryptoPricesRequest {
+  repeated string symbols = 1;
+}
+
+message GetMultipleCryptoPricesResponse {
+  bool success = 1;
+  string error = 2;
+  map<string, CryptoPriceInfo> prices = 3;
+}
+
+message GetTopCryptoPricesRequest {
+  int32 limit = 1;
+}
+
+message GetTopCryptoPricesResponse {
+  bool success = 1;
+  string error = 2;
+  repeated CryptoPriceInfo prices = 3;
+}
+
+message SearchCryptoRequest {
+  string query = 1;
+}
+
+message SearchCryptoResponse {
+  bool success = 1;
+  string error = 2;
+  repeated CryptoPriceInfo results = 3;
+}
+
+message GetPriceHistoryRequest {
+  string symbol = 1;
+  int32 days = 2;
+}
+
+message GetPriceHistoryResponse {
+  bool success = 1;
+  string error = 2;
+  repeated double prices = 3;
 }
 
 message GetLiquidityPoolResponse {

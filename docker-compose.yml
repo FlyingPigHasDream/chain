@@ -1,8 +1,26 @@
 version: '3.8'
 
 services:
-  chain-service:
+  # Consul 注册中心
+  consul:
+    image: consul:1.15
+    command: consul agent -dev -ui -client=0.0.0.0
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # HTTP REST API 服务
+  chain-http-service:
     build: .
+    command: ["./http-server"]
     ports:
       - "8080:8080"
     environment:
@@ -13,8 +31,34 @@ services:
       - CHAIN_PRIVATE_KEY=your-private-key-here
       - CHAIN_ID=1
       - GAS_LIMIT=21000
+      - CONSUL_ADDRESS=consul:8500
     volumes:
       - ./configs:/root/configs
+    depends_on:
+      consul:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # gRPC 服务
+  chain-grpc-service:
+    build: .
+    command: ["./grpc-server"]
+    ports:
+      - "9090:9090"
+    environment:
+      - GRPC_PORT=9090
+      - HOST=0.0.0.0
+      - LOG_LEVEL=info
+      - CHAIN_RPC_URL=https://mainnet.infura.io/v3/your-project-id
+      - CHAIN_PRIVATE_KEY=your-private-key-here
+      - CHAIN_ID=1
+      - GAS_LIMIT=21000
+      - CONSUL_ADDRESS=consul:8500
+    volumes:
+      - ./configs:/root/configs
+    depends_on:
+      consul:
+        condition: service_healthy
     restart: unless-stopped
 
   # 可选：添加数据库服务

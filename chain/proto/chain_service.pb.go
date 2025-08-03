@@ -1429,9 +1429,7 @@ type LiquidityPool struct {
 	PairAddress    string                 `protobuf:"bytes,1,opt,name=pair_address,json=pairAddress,proto3" json:"pair_address,omitempty"`
 	Token0         string                 `protobuf:"bytes,2,opt,name=token0,proto3" json:"token0,omitempty"`
 	Token1         string                 `protobuf:"bytes,3,opt,name=token1,proto3" json:"token1,omitempty"`
-	Reserve0       string                 `protobuf:"bytes,4,opt,name=reserve0,proto3" json:"reserve0,omitempty"`
-	Reserve1       string                 `protobuf:"bytes,5,opt,name=reserve1,proto3" json:"reserve1,omitempty"`
-	TotalLiquidity string                 `protobuf:"bytes,6,opt,name=total_liquidity,json=totalLiquidity,proto3" json:"total_liquidity,omitempty"`
+	TotalLiquidity string                 `protobuf:"bytes,4,opt,name=total_liquidity,json=totalLiquidity,proto3" json:"total_liquidity,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1487,25 +1485,640 @@ func (x *LiquidityPool) GetToken1() string {
 	return ""
 }
 
-func (x *LiquidityPool) GetReserve0() string {
-	if x != nil {
-		return x.Reserve0
-	}
-	return ""
-}
-
-func (x *LiquidityPool) GetReserve1() string {
-	if x != nil {
-		return x.Reserve1
-	}
-	return ""
-}
-
 func (x *LiquidityPool) GetTotalLiquidity() string {
 	if x != nil {
 		return x.TotalLiquidity
 	}
 	return ""
+}
+
+// 价格服务消息
+type CryptoPriceInfo struct {
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Symbol                 string                 `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	Name                   string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	CurrentPrice           float64                `protobuf:"fixed64,3,opt,name=current_price,json=currentPrice,proto3" json:"current_price,omitempty"`
+	MarketCap              float64                `protobuf:"fixed64,4,opt,name=market_cap,json=marketCap,proto3" json:"market_cap,omitempty"`
+	Volume_24H             float64                `protobuf:"fixed64,5,opt,name=volume_24h,json=volume24h,proto3" json:"volume_24h,omitempty"`
+	PriceChange_24H        float64                `protobuf:"fixed64,6,opt,name=price_change_24h,json=priceChange24h,proto3" json:"price_change_24h,omitempty"`
+	PriceChangePercent_24H float64                `protobuf:"fixed64,7,opt,name=price_change_percent_24h,json=priceChangePercent24h,proto3" json:"price_change_percent_24h,omitempty"`
+	LastUpdated            string                 `protobuf:"bytes,8,opt,name=last_updated,json=lastUpdated,proto3" json:"last_updated,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *CryptoPriceInfo) Reset() {
+	*x = CryptoPriceInfo{}
+	mi := &file_proto_chain_service_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CryptoPriceInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CryptoPriceInfo) ProtoMessage() {}
+
+func (x *CryptoPriceInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CryptoPriceInfo.ProtoReflect.Descriptor instead.
+func (*CryptoPriceInfo) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *CryptoPriceInfo) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *CryptoPriceInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CryptoPriceInfo) GetCurrentPrice() float64 {
+	if x != nil {
+		return x.CurrentPrice
+	}
+	return 0
+}
+
+func (x *CryptoPriceInfo) GetMarketCap() float64 {
+	if x != nil {
+		return x.MarketCap
+	}
+	return 0
+}
+
+func (x *CryptoPriceInfo) GetVolume_24H() float64 {
+	if x != nil {
+		return x.Volume_24H
+	}
+	return 0
+}
+
+func (x *CryptoPriceInfo) GetPriceChange_24H() float64 {
+	if x != nil {
+		return x.PriceChange_24H
+	}
+	return 0
+}
+
+func (x *CryptoPriceInfo) GetPriceChangePercent_24H() float64 {
+	if x != nil {
+		return x.PriceChangePercent_24H
+	}
+	return 0
+}
+
+func (x *CryptoPriceInfo) GetLastUpdated() string {
+	if x != nil {
+		return x.LastUpdated
+	}
+	return ""
+}
+
+type GetCryptoPriceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        string                 `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCryptoPriceRequest) Reset() {
+	*x = GetCryptoPriceRequest{}
+	mi := &file_proto_chain_service_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCryptoPriceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCryptoPriceRequest) ProtoMessage() {}
+
+func (x *GetCryptoPriceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCryptoPriceRequest.ProtoReflect.Descriptor instead.
+func (*GetCryptoPriceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *GetCryptoPriceRequest) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+type GetCryptoPriceResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	Price         *CryptoPriceInfo       `protobuf:"bytes,3,opt,name=price,proto3" json:"price,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCryptoPriceResponse) Reset() {
+	*x = GetCryptoPriceResponse{}
+	mi := &file_proto_chain_service_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCryptoPriceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCryptoPriceResponse) ProtoMessage() {}
+
+func (x *GetCryptoPriceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCryptoPriceResponse.ProtoReflect.Descriptor instead.
+func (*GetCryptoPriceResponse) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *GetCryptoPriceResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetCryptoPriceResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *GetCryptoPriceResponse) GetPrice() *CryptoPriceInfo {
+	if x != nil {
+		return x.Price
+	}
+	return nil
+}
+
+type GetMultipleCryptoPricesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbols       []string               `protobuf:"bytes,1,rep,name=symbols,proto3" json:"symbols,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMultipleCryptoPricesRequest) Reset() {
+	*x = GetMultipleCryptoPricesRequest{}
+	mi := &file_proto_chain_service_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMultipleCryptoPricesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMultipleCryptoPricesRequest) ProtoMessage() {}
+
+func (x *GetMultipleCryptoPricesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMultipleCryptoPricesRequest.ProtoReflect.Descriptor instead.
+func (*GetMultipleCryptoPricesRequest) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetMultipleCryptoPricesRequest) GetSymbols() []string {
+	if x != nil {
+		return x.Symbols
+	}
+	return nil
+}
+
+type GetMultipleCryptoPricesResponse struct {
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	Success       bool                        `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Error         string                      `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	Prices        map[string]*CryptoPriceInfo `protobuf:"bytes,3,rep,name=prices,proto3" json:"prices,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMultipleCryptoPricesResponse) Reset() {
+	*x = GetMultipleCryptoPricesResponse{}
+	mi := &file_proto_chain_service_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMultipleCryptoPricesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMultipleCryptoPricesResponse) ProtoMessage() {}
+
+func (x *GetMultipleCryptoPricesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMultipleCryptoPricesResponse.ProtoReflect.Descriptor instead.
+func (*GetMultipleCryptoPricesResponse) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *GetMultipleCryptoPricesResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetMultipleCryptoPricesResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *GetMultipleCryptoPricesResponse) GetPrices() map[string]*CryptoPriceInfo {
+	if x != nil {
+		return x.Prices
+	}
+	return nil
+}
+
+type GetTopCryptoPricesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Limit         int32                  `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTopCryptoPricesRequest) Reset() {
+	*x = GetTopCryptoPricesRequest{}
+	mi := &file_proto_chain_service_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTopCryptoPricesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTopCryptoPricesRequest) ProtoMessage() {}
+
+func (x *GetTopCryptoPricesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTopCryptoPricesRequest.ProtoReflect.Descriptor instead.
+func (*GetTopCryptoPricesRequest) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *GetTopCryptoPricesRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type GetTopCryptoPricesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	Prices        []*CryptoPriceInfo     `protobuf:"bytes,3,rep,name=prices,proto3" json:"prices,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTopCryptoPricesResponse) Reset() {
+	*x = GetTopCryptoPricesResponse{}
+	mi := &file_proto_chain_service_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTopCryptoPricesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTopCryptoPricesResponse) ProtoMessage() {}
+
+func (x *GetTopCryptoPricesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTopCryptoPricesResponse.ProtoReflect.Descriptor instead.
+func (*GetTopCryptoPricesResponse) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *GetTopCryptoPricesResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetTopCryptoPricesResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *GetTopCryptoPricesResponse) GetPrices() []*CryptoPriceInfo {
+	if x != nil {
+		return x.Prices
+	}
+	return nil
+}
+
+type SearchCryptoRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchCryptoRequest) Reset() {
+	*x = SearchCryptoRequest{}
+	mi := &file_proto_chain_service_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchCryptoRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchCryptoRequest) ProtoMessage() {}
+
+func (x *SearchCryptoRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchCryptoRequest.ProtoReflect.Descriptor instead.
+func (*SearchCryptoRequest) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *SearchCryptoRequest) GetQuery() string {
+	if x != nil {
+		return x.Query
+	}
+	return ""
+}
+
+type SearchCryptoResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	Results       []*CryptoPriceInfo     `protobuf:"bytes,3,rep,name=results,proto3" json:"results,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchCryptoResponse) Reset() {
+	*x = SearchCryptoResponse{}
+	mi := &file_proto_chain_service_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchCryptoResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchCryptoResponse) ProtoMessage() {}
+
+func (x *SearchCryptoResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchCryptoResponse.ProtoReflect.Descriptor instead.
+func (*SearchCryptoResponse) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *SearchCryptoResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *SearchCryptoResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *SearchCryptoResponse) GetResults() []*CryptoPriceInfo {
+	if x != nil {
+		return x.Results
+	}
+	return nil
+}
+
+type GetPriceHistoryRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        string                 `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	Days          int32                  `protobuf:"varint,2,opt,name=days,proto3" json:"days,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPriceHistoryRequest) Reset() {
+	*x = GetPriceHistoryRequest{}
+	mi := &file_proto_chain_service_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPriceHistoryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPriceHistoryRequest) ProtoMessage() {}
+
+func (x *GetPriceHistoryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPriceHistoryRequest.ProtoReflect.Descriptor instead.
+func (*GetPriceHistoryRequest) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *GetPriceHistoryRequest) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *GetPriceHistoryRequest) GetDays() int32 {
+	if x != nil {
+		return x.Days
+	}
+	return 0
+}
+
+type GetPriceHistoryResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Error         string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	Prices        []float64              `protobuf:"fixed64,3,rep,packed,name=prices,proto3" json:"prices,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPriceHistoryResponse) Reset() {
+	*x = GetPriceHistoryResponse{}
+	mi := &file_proto_chain_service_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPriceHistoryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPriceHistoryResponse) ProtoMessage() {}
+
+func (x *GetPriceHistoryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_chain_service_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPriceHistoryResponse.ProtoReflect.Descriptor instead.
+func (*GetPriceHistoryResponse) Descriptor() ([]byte, []int) {
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *GetPriceHistoryResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *GetPriceHistoryResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *GetPriceHistoryResponse) GetPrices() []float64 {
+	if x != nil {
+		return x.Prices
+	}
+	return nil
 }
 
 type GetLiquidityPoolResponse struct {
@@ -1519,7 +2132,7 @@ type GetLiquidityPoolResponse struct {
 
 func (x *GetLiquidityPoolResponse) Reset() {
 	*x = GetLiquidityPoolResponse{}
-	mi := &file_proto_chain_service_proto_msgTypes[25]
+	mi := &file_proto_chain_service_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1531,7 +2144,7 @@ func (x *GetLiquidityPoolResponse) String() string {
 func (*GetLiquidityPoolResponse) ProtoMessage() {}
 
 func (x *GetLiquidityPoolResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_chain_service_proto_msgTypes[25]
+	mi := &file_proto_chain_service_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1544,7 +2157,7 @@ func (x *GetLiquidityPoolResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLiquidityPoolResponse.ProtoReflect.Descriptor instead.
 func (*GetLiquidityPoolResponse) Descriptor() ([]byte, []int) {
-	return file_proto_chain_service_proto_rawDescGZIP(), []int{25}
+	return file_proto_chain_service_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetLiquidityPoolResponse) GetPool() *LiquidityPool {
@@ -1665,14 +2278,57 @@ const file_proto_chain_service_proto_rawDesc = "" +
 	"\x05error\x18\x03 \x01(\tR\x05error\"I\n" +
 	"\x17GetLiquidityPoolRequest\x12\x16\n" +
 	"\x06token0\x18\x01 \x01(\tR\x06token0\x12\x16\n" +
-	"\x06token1\x18\x02 \x01(\tR\x06token1\"\xc3\x01\n" +
+	"\x06token1\x18\x02 \x01(\tR\x06token1\"\x8b\x01\n" +
 	"\rLiquidityPool\x12!\n" +
 	"\fpair_address\x18\x01 \x01(\tR\vpairAddress\x12\x16\n" +
 	"\x06token0\x18\x02 \x01(\tR\x06token0\x12\x16\n" +
-	"\x06token1\x18\x03 \x01(\tR\x06token1\x12\x1a\n" +
-	"\breserve0\x18\x04 \x01(\tR\breserve0\x12\x1a\n" +
-	"\breserve1\x18\x05 \x01(\tR\breserve1\x12'\n" +
-	"\x0ftotal_liquidity\x18\x06 \x01(\tR\x0etotalLiquidity\"t\n" +
+	"\x06token1\x18\x03 \x01(\tR\x06token1\x12'\n" +
+	"\x0ftotal_liquidity\x18\x04 \x01(\tR\x0etotalLiquidity\"\xa6\x02\n" +
+	"\x0fCryptoPriceInfo\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12#\n" +
+	"\rcurrent_price\x18\x03 \x01(\x01R\fcurrentPrice\x12\x1d\n" +
+	"\n" +
+	"market_cap\x18\x04 \x01(\x01R\tmarketCap\x12\x1d\n" +
+	"\n" +
+	"volume_24h\x18\x05 \x01(\x01R\tvolume24h\x12(\n" +
+	"\x10price_change_24h\x18\x06 \x01(\x01R\x0epriceChange24h\x127\n" +
+	"\x18price_change_percent_24h\x18\a \x01(\x01R\x15priceChangePercent24h\x12!\n" +
+	"\flast_updated\x18\b \x01(\tR\vlastUpdated\"/\n" +
+	"\x15GetCryptoPriceRequest\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\"v\n" +
+	"\x16GetCryptoPriceResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\x12,\n" +
+	"\x05price\x18\x03 \x01(\v2\x16.chain.CryptoPriceInfoR\x05price\":\n" +
+	"\x1eGetMultipleCryptoPricesRequest\x12\x18\n" +
+	"\asymbols\x18\x01 \x03(\tR\asymbols\"\xf0\x01\n" +
+	"\x1fGetMultipleCryptoPricesResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\x12J\n" +
+	"\x06prices\x18\x03 \x03(\v22.chain.GetMultipleCryptoPricesResponse.PricesEntryR\x06prices\x1aQ\n" +
+	"\vPricesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
+	"\x05value\x18\x02 \x01(\v2\x16.chain.CryptoPriceInfoR\x05value:\x028\x01\"1\n" +
+	"\x19GetTopCryptoPricesRequest\x12\x14\n" +
+	"\x05limit\x18\x01 \x01(\x05R\x05limit\"|\n" +
+	"\x1aGetTopCryptoPricesResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\x12.\n" +
+	"\x06prices\x18\x03 \x03(\v2\x16.chain.CryptoPriceInfoR\x06prices\"+\n" +
+	"\x13SearchCryptoRequest\x12\x14\n" +
+	"\x05query\x18\x01 \x01(\tR\x05query\"x\n" +
+	"\x14SearchCryptoResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\x120\n" +
+	"\aresults\x18\x03 \x03(\v2\x16.chain.CryptoPriceInfoR\aresults\"D\n" +
+	"\x16GetPriceHistoryRequest\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12\x12\n" +
+	"\x04days\x18\x02 \x01(\x05R\x04days\"a\n" +
+	"\x17GetPriceHistoryResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
+	"\x05error\x18\x02 \x01(\tR\x05error\x12\x16\n" +
+	"\x06prices\x18\x03 \x03(\x01R\x06prices\"t\n" +
 	"\x18GetLiquidityPoolResponse\x12(\n" +
 	"\x04pool\x18\x01 \x01(\v2\x14.chain.LiquidityPoolR\x04pool\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x14\n" +
@@ -1692,7 +2348,13 @@ const file_proto_chain_service_proto_rawDesc = "" +
 	"\x16GetMultipleTokenPrices\x12$.chain.GetMultipleTokenPricesRequest\x1a%.chain.GetMultipleTokenPricesResponse\x12S\n" +
 	"\x10GetLiquidityPool\x12\x1e.chain.GetLiquidityPoolRequest\x1a\x1f.chain.GetLiquidityPoolResponse2O\n" +
 	"\rHealthService\x12>\n" +
-	"\x05Check\x12\x19.chain.HealthCheckRequest\x1a\x1a.chain.HealthCheckResponseB\rZ\vchain/protob\x06proto3"
+	"\x05Check\x12\x19.chain.HealthCheckRequest\x1a\x1a.chain.HealthCheckResponse2\xbd\x03\n" +
+	"\fPriceService\x12M\n" +
+	"\x0eGetCryptoPrice\x12\x1c.chain.GetCryptoPriceRequest\x1a\x1d.chain.GetCryptoPriceResponse\x12h\n" +
+	"\x17GetMultipleCryptoPrices\x12%.chain.GetMultipleCryptoPricesRequest\x1a&.chain.GetMultipleCryptoPricesResponse\x12Y\n" +
+	"\x12GetTopCryptoPrices\x12 .chain.GetTopCryptoPricesRequest\x1a!.chain.GetTopCryptoPricesResponse\x12G\n" +
+	"\fSearchCrypto\x12\x1a.chain.SearchCryptoRequest\x1a\x1b.chain.SearchCryptoResponse\x12P\n" +
+	"\x0fGetPriceHistory\x12\x1d.chain.GetPriceHistoryRequest\x1a\x1e.chain.GetPriceHistoryResponseB\rZ\vchain/protob\x06proto3"
 
 var (
 	file_proto_chain_service_proto_rawDescOnce sync.Once
@@ -1706,34 +2368,46 @@ func file_proto_chain_service_proto_rawDescGZIP() []byte {
 	return file_proto_chain_service_proto_rawDescData
 }
 
-var file_proto_chain_service_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_proto_chain_service_proto_msgTypes = make([]protoimpl.MessageInfo, 38)
 var file_proto_chain_service_proto_goTypes = []any{
-	(*HealthCheckRequest)(nil),             // 0: chain.HealthCheckRequest
-	(*HealthCheckResponse)(nil),            // 1: chain.HealthCheckResponse
-	(*GetBalanceRequest)(nil),              // 2: chain.GetBalanceRequest
-	(*GetBalanceResponse)(nil),             // 3: chain.GetBalanceResponse
-	(*TransferRequest)(nil),                // 4: chain.TransferRequest
-	(*TransferResponse)(nil),               // 5: chain.TransferResponse
-	(*GetTransactionRequest)(nil),          // 6: chain.GetTransactionRequest
-	(*GetTransactionResponse)(nil),         // 7: chain.GetTransactionResponse
-	(*CallContractRequest)(nil),            // 8: chain.CallContractRequest
-	(*CallContractResponse)(nil),           // 9: chain.CallContractResponse
-	(*DeployContractRequest)(nil),          // 10: chain.DeployContractRequest
-	(*DeployContractResponse)(nil),         // 11: chain.DeployContractResponse
-	(*GetTokenInfoRequest)(nil),            // 12: chain.GetTokenInfoRequest
-	(*TokenInfo)(nil),                      // 13: chain.TokenInfo
-	(*GetTokenInfoResponse)(nil),           // 14: chain.GetTokenInfoResponse
-	(*SearchTokenRequest)(nil),             // 15: chain.SearchTokenRequest
-	(*SearchTokenResponse)(nil),            // 16: chain.SearchTokenResponse
-	(*GetTokenPriceRequest)(nil),           // 17: chain.GetTokenPriceRequest
-	(*TokenPrice)(nil),                     // 18: chain.TokenPrice
-	(*GetTokenPriceResponse)(nil),          // 19: chain.GetTokenPriceResponse
-	(*TokenRequest)(nil),                   // 20: chain.TokenRequest
-	(*GetMultipleTokenPricesRequest)(nil),  // 21: chain.GetMultipleTokenPricesRequest
-	(*GetMultipleTokenPricesResponse)(nil), // 22: chain.GetMultipleTokenPricesResponse
-	(*GetLiquidityPoolRequest)(nil),        // 23: chain.GetLiquidityPoolRequest
-	(*LiquidityPool)(nil),                  // 24: chain.LiquidityPool
-	(*GetLiquidityPoolResponse)(nil),       // 25: chain.GetLiquidityPoolResponse
+	(*HealthCheckRequest)(nil),              // 0: chain.HealthCheckRequest
+	(*HealthCheckResponse)(nil),             // 1: chain.HealthCheckResponse
+	(*GetBalanceRequest)(nil),               // 2: chain.GetBalanceRequest
+	(*GetBalanceResponse)(nil),              // 3: chain.GetBalanceResponse
+	(*TransferRequest)(nil),                 // 4: chain.TransferRequest
+	(*TransferResponse)(nil),                // 5: chain.TransferResponse
+	(*GetTransactionRequest)(nil),           // 6: chain.GetTransactionRequest
+	(*GetTransactionResponse)(nil),          // 7: chain.GetTransactionResponse
+	(*CallContractRequest)(nil),             // 8: chain.CallContractRequest
+	(*CallContractResponse)(nil),            // 9: chain.CallContractResponse
+	(*DeployContractRequest)(nil),           // 10: chain.DeployContractRequest
+	(*DeployContractResponse)(nil),          // 11: chain.DeployContractResponse
+	(*GetTokenInfoRequest)(nil),             // 12: chain.GetTokenInfoRequest
+	(*TokenInfo)(nil),                       // 13: chain.TokenInfo
+	(*GetTokenInfoResponse)(nil),            // 14: chain.GetTokenInfoResponse
+	(*SearchTokenRequest)(nil),              // 15: chain.SearchTokenRequest
+	(*SearchTokenResponse)(nil),             // 16: chain.SearchTokenResponse
+	(*GetTokenPriceRequest)(nil),            // 17: chain.GetTokenPriceRequest
+	(*TokenPrice)(nil),                      // 18: chain.TokenPrice
+	(*GetTokenPriceResponse)(nil),           // 19: chain.GetTokenPriceResponse
+	(*TokenRequest)(nil),                    // 20: chain.TokenRequest
+	(*GetMultipleTokenPricesRequest)(nil),   // 21: chain.GetMultipleTokenPricesRequest
+	(*GetMultipleTokenPricesResponse)(nil),  // 22: chain.GetMultipleTokenPricesResponse
+	(*GetLiquidityPoolRequest)(nil),         // 23: chain.GetLiquidityPoolRequest
+	(*LiquidityPool)(nil),                   // 24: chain.LiquidityPool
+	(*CryptoPriceInfo)(nil),                 // 25: chain.CryptoPriceInfo
+	(*GetCryptoPriceRequest)(nil),           // 26: chain.GetCryptoPriceRequest
+	(*GetCryptoPriceResponse)(nil),          // 27: chain.GetCryptoPriceResponse
+	(*GetMultipleCryptoPricesRequest)(nil),  // 28: chain.GetMultipleCryptoPricesRequest
+	(*GetMultipleCryptoPricesResponse)(nil), // 29: chain.GetMultipleCryptoPricesResponse
+	(*GetTopCryptoPricesRequest)(nil),       // 30: chain.GetTopCryptoPricesRequest
+	(*GetTopCryptoPricesResponse)(nil),      // 31: chain.GetTopCryptoPricesResponse
+	(*SearchCryptoRequest)(nil),             // 32: chain.SearchCryptoRequest
+	(*SearchCryptoResponse)(nil),            // 33: chain.SearchCryptoResponse
+	(*GetPriceHistoryRequest)(nil),          // 34: chain.GetPriceHistoryRequest
+	(*GetPriceHistoryResponse)(nil),         // 35: chain.GetPriceHistoryResponse
+	(*GetLiquidityPoolResponse)(nil),        // 36: chain.GetLiquidityPoolResponse
+	nil,                                     // 37: chain.GetMultipleCryptoPricesResponse.PricesEntry
 }
 var file_proto_chain_service_proto_depIdxs = []int32{
 	13, // 0: chain.GetTokenInfoResponse.token:type_name -> chain.TokenInfo
@@ -1741,34 +2415,49 @@ var file_proto_chain_service_proto_depIdxs = []int32{
 	18, // 2: chain.GetTokenPriceResponse.price:type_name -> chain.TokenPrice
 	20, // 3: chain.GetMultipleTokenPricesRequest.tokens:type_name -> chain.TokenRequest
 	18, // 4: chain.GetMultipleTokenPricesResponse.prices:type_name -> chain.TokenPrice
-	24, // 5: chain.GetLiquidityPoolResponse.pool:type_name -> chain.LiquidityPool
-	2,  // 6: chain.ChainService.GetBalance:input_type -> chain.GetBalanceRequest
-	4,  // 7: chain.ChainService.Transfer:input_type -> chain.TransferRequest
-	6,  // 8: chain.ChainService.GetTransaction:input_type -> chain.GetTransactionRequest
-	8,  // 9: chain.ChainService.CallContract:input_type -> chain.CallContractRequest
-	10, // 10: chain.ChainService.DeployContract:input_type -> chain.DeployContractRequest
-	12, // 11: chain.BSCService.GetTokenInfo:input_type -> chain.GetTokenInfoRequest
-	15, // 12: chain.BSCService.SearchToken:input_type -> chain.SearchTokenRequest
-	17, // 13: chain.BSCService.GetTokenPrice:input_type -> chain.GetTokenPriceRequest
-	21, // 14: chain.BSCService.GetMultipleTokenPrices:input_type -> chain.GetMultipleTokenPricesRequest
-	23, // 15: chain.BSCService.GetLiquidityPool:input_type -> chain.GetLiquidityPoolRequest
-	0,  // 16: chain.HealthService.Check:input_type -> chain.HealthCheckRequest
-	3,  // 17: chain.ChainService.GetBalance:output_type -> chain.GetBalanceResponse
-	5,  // 18: chain.ChainService.Transfer:output_type -> chain.TransferResponse
-	7,  // 19: chain.ChainService.GetTransaction:output_type -> chain.GetTransactionResponse
-	9,  // 20: chain.ChainService.CallContract:output_type -> chain.CallContractResponse
-	11, // 21: chain.ChainService.DeployContract:output_type -> chain.DeployContractResponse
-	14, // 22: chain.BSCService.GetTokenInfo:output_type -> chain.GetTokenInfoResponse
-	16, // 23: chain.BSCService.SearchToken:output_type -> chain.SearchTokenResponse
-	19, // 24: chain.BSCService.GetTokenPrice:output_type -> chain.GetTokenPriceResponse
-	22, // 25: chain.BSCService.GetMultipleTokenPrices:output_type -> chain.GetMultipleTokenPricesResponse
-	25, // 26: chain.BSCService.GetLiquidityPool:output_type -> chain.GetLiquidityPoolResponse
-	1,  // 27: chain.HealthService.Check:output_type -> chain.HealthCheckResponse
-	17, // [17:28] is the sub-list for method output_type
-	6,  // [6:17] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	25, // 5: chain.GetCryptoPriceResponse.price:type_name -> chain.CryptoPriceInfo
+	37, // 6: chain.GetMultipleCryptoPricesResponse.prices:type_name -> chain.GetMultipleCryptoPricesResponse.PricesEntry
+	25, // 7: chain.GetTopCryptoPricesResponse.prices:type_name -> chain.CryptoPriceInfo
+	25, // 8: chain.SearchCryptoResponse.results:type_name -> chain.CryptoPriceInfo
+	24, // 9: chain.GetLiquidityPoolResponse.pool:type_name -> chain.LiquidityPool
+	25, // 10: chain.GetMultipleCryptoPricesResponse.PricesEntry.value:type_name -> chain.CryptoPriceInfo
+	2,  // 11: chain.ChainService.GetBalance:input_type -> chain.GetBalanceRequest
+	4,  // 12: chain.ChainService.Transfer:input_type -> chain.TransferRequest
+	6,  // 13: chain.ChainService.GetTransaction:input_type -> chain.GetTransactionRequest
+	8,  // 14: chain.ChainService.CallContract:input_type -> chain.CallContractRequest
+	10, // 15: chain.ChainService.DeployContract:input_type -> chain.DeployContractRequest
+	12, // 16: chain.BSCService.GetTokenInfo:input_type -> chain.GetTokenInfoRequest
+	15, // 17: chain.BSCService.SearchToken:input_type -> chain.SearchTokenRequest
+	17, // 18: chain.BSCService.GetTokenPrice:input_type -> chain.GetTokenPriceRequest
+	21, // 19: chain.BSCService.GetMultipleTokenPrices:input_type -> chain.GetMultipleTokenPricesRequest
+	23, // 20: chain.BSCService.GetLiquidityPool:input_type -> chain.GetLiquidityPoolRequest
+	0,  // 21: chain.HealthService.Check:input_type -> chain.HealthCheckRequest
+	26, // 22: chain.PriceService.GetCryptoPrice:input_type -> chain.GetCryptoPriceRequest
+	28, // 23: chain.PriceService.GetMultipleCryptoPrices:input_type -> chain.GetMultipleCryptoPricesRequest
+	30, // 24: chain.PriceService.GetTopCryptoPrices:input_type -> chain.GetTopCryptoPricesRequest
+	32, // 25: chain.PriceService.SearchCrypto:input_type -> chain.SearchCryptoRequest
+	34, // 26: chain.PriceService.GetPriceHistory:input_type -> chain.GetPriceHistoryRequest
+	3,  // 27: chain.ChainService.GetBalance:output_type -> chain.GetBalanceResponse
+	5,  // 28: chain.ChainService.Transfer:output_type -> chain.TransferResponse
+	7,  // 29: chain.ChainService.GetTransaction:output_type -> chain.GetTransactionResponse
+	9,  // 30: chain.ChainService.CallContract:output_type -> chain.CallContractResponse
+	11, // 31: chain.ChainService.DeployContract:output_type -> chain.DeployContractResponse
+	14, // 32: chain.BSCService.GetTokenInfo:output_type -> chain.GetTokenInfoResponse
+	16, // 33: chain.BSCService.SearchToken:output_type -> chain.SearchTokenResponse
+	19, // 34: chain.BSCService.GetTokenPrice:output_type -> chain.GetTokenPriceResponse
+	22, // 35: chain.BSCService.GetMultipleTokenPrices:output_type -> chain.GetMultipleTokenPricesResponse
+	36, // 36: chain.BSCService.GetLiquidityPool:output_type -> chain.GetLiquidityPoolResponse
+	1,  // 37: chain.HealthService.Check:output_type -> chain.HealthCheckResponse
+	27, // 38: chain.PriceService.GetCryptoPrice:output_type -> chain.GetCryptoPriceResponse
+	29, // 39: chain.PriceService.GetMultipleCryptoPrices:output_type -> chain.GetMultipleCryptoPricesResponse
+	31, // 40: chain.PriceService.GetTopCryptoPrices:output_type -> chain.GetTopCryptoPricesResponse
+	33, // 41: chain.PriceService.SearchCrypto:output_type -> chain.SearchCryptoResponse
+	35, // 42: chain.PriceService.GetPriceHistory:output_type -> chain.GetPriceHistoryResponse
+	27, // [27:43] is the sub-list for method output_type
+	11, // [11:27] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_proto_chain_service_proto_init() }
@@ -1782,9 +2471,9 @@ func file_proto_chain_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_chain_service_proto_rawDesc), len(file_proto_chain_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   26,
+			NumMessages:   38,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_proto_chain_service_proto_goTypes,
 		DependencyIndexes: file_proto_chain_service_proto_depIdxs,
