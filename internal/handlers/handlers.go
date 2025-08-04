@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"chain/internal/config"
+	"chain/internal/database"
 	"chain/internal/services"
 	"chain/pkg/logger"
 
@@ -24,8 +25,9 @@ func NewChainHandler(cfg *config.Config) *ChainHandler {
 }
 
 // RegisterRoutes 注册路由
-func RegisterRoutes(router *gin.Engine, cfg *config.Config) {
+func RegisterRoutes(router *gin.Engine, cfg *config.Config, db *database.Database) {
 	chainHandler := NewChainHandler(cfg)
+	databaseHandler := NewDatabaseHandler(db)
 
 	// 健康检查
 	router.GET("/health", healthCheck)
@@ -41,6 +43,30 @@ func RegisterRoutes(router *gin.Engine, cfg *config.Config) {
 			chain.GET("/transaction/:hash", chainHandler.GetTransaction)
 			chain.POST("/contract/call", chainHandler.CallContract)
 			chain.POST("/contract/deploy", chainHandler.DeployContract)
+		}
+
+		// 数据库查询相关路由
+		db := api.Group("/db")
+		{
+			// 交易相关
+			db.GET("/transaction/:hash", databaseHandler.GetTransactionByHash)
+			db.GET("/transactions/address/:address", databaseHandler.GetTransactionsByAddress)
+			db.GET("/transactions/search", databaseHandler.SearchTransactions)
+
+			// 区块相关
+			db.GET("/block/:number", databaseHandler.GetBlockByNumber)
+			db.GET("/block/hash/:hash", databaseHandler.GetBlockByHash)
+			db.GET("/blocks/latest", databaseHandler.GetLatestBlocks)
+
+			// 账户相关
+			db.GET("/account/:address", databaseHandler.GetAccountByAddress)
+
+			// 代币相关
+			db.GET("/token/:address", databaseHandler.GetTokenByAddress)
+			db.GET("/account/:address/balances", databaseHandler.GetTokenBalancesByAccount)
+
+			// 统计相关
+			db.GET("/stats", databaseHandler.GetStatistics)
 		}
 	}
 

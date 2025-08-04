@@ -10,7 +10,9 @@ import (
 	"time"
 
 	"chain/internal/config"
+	"chain/internal/database"
 	"chain/internal/handlers"
+	"chain/internal/models"
 	"chain/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +23,7 @@ type Server struct {
 	config *config.Config
 	router *gin.Engine
 	server *http.Server
+	db     *database.Database
 }
 
 // New 创建新的服务器实例
@@ -32,6 +35,26 @@ func New(cfg *config.Config) *Server {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	// 初始化数据库
+	db, err := database.New(&cfg.Database)
+	if err != nil {
+		logger.Error("Failed to initialize database: %v", err)
+		panic(err)
+	}
+
+	// 自动迁移数据库表
+	err = db.AutoMigrate(
+		&models.Transaction{},
+		&models.Block{},
+		&models.Account{},
+		&models.Token{},
+		&models.TokenBalance{},
+	)
+	if err != nil {
+		logger.Error("Failed to migrate database: %v", err)
+		panic(err)
+	}
+
 	router := gin.New()
 	
 	// 添加中间件
@@ -40,11 +63,12 @@ func New(cfg *config.Config) *Server {
 	router.Use(corsMiddleware())
 
 	// 注册路由
-	handlers.RegisterRoutes(router, cfg)
+	handlers.RegisterRoutes(router, cfg, db)
 
 	return &Server{
 		config: cfg,
 		router: router,
+		db:     db,
 	}
 }
 
