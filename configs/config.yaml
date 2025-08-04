@@ -16,4 +16,8 @@ database:
   password: "password"
   dbname: "chain_db"
 
+registry:
+  type: "etcd"  # 支持 etcd, consul, memory
+  endpoints: "localhost:2379"  # etcd地址，多个用逗号分隔
+
 log_level: "info"

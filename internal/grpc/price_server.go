@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	pb "chain/proto"
+	pb "chain/chain/proto"
 	"chain/internal/services"
 )
 
@@ -40,7 +40,7 @@ func (s *PriceServer) GetCryptoPrice(ctx context.Context, req *pb.GetCryptoPrice
 			Volume_24H:             price.Volume24h,
 			PriceChange_24H:        price.PriceChange24h,
 			PriceChangePercent_24H: price.PriceChangePercent24h,
-			LastUpdated:            price.LastUpdated,
+			LastUpdated:           price.LastUpdated.Format("2006-01-02 15:04:05"),
 		},
 	}, nil
 }
@@ -65,7 +65,7 @@ func (s *PriceServer) GetMultipleCryptoPrices(ctx context.Context, req *pb.GetMu
 			Volume_24H:             price.Volume24h,
 			PriceChange_24H:        price.PriceChange24h,
 			PriceChangePercent_24H: price.PriceChangePercent24h,
-			LastUpdated:            price.LastUpdated,
+			LastUpdated:           price.LastUpdated.Format("2006-01-02 15:04:05"),
 		}
 	}
 
@@ -95,7 +95,7 @@ func (s *PriceServer) GetTopCryptoPrices(ctx context.Context, req *pb.GetTopCryp
 			Volume_24H:             price.Volume24h,
 			PriceChange_24H:        price.PriceChange24h,
 			PriceChangePercent_24H: price.PriceChangePercent24h,
-			LastUpdated:            price.LastUpdated,
+			LastUpdated:           price.LastUpdated.Format("2006-01-02 15:04:05"),
 		})
 	}
 
@@ -125,7 +125,7 @@ func (s *PriceServer) SearchCrypto(ctx context.Context, req *pb.SearchCryptoRequ
 			Volume_24H:             result.Volume24h,
 			PriceChange_24H:        result.PriceChange24h,
 			PriceChangePercent_24H: result.PriceChangePercent24h,
-			LastUpdated:            result.LastUpdated,
+			LastUpdated:           result.LastUpdated.Format("2006-01-02 15:04:05"),
 		})
 	}
 

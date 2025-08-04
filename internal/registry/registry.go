@@ -2,12 +2,15 @@ package registry
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
 	consulapi "github.com/hashicorp/consul/api"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 // ServiceInfo 服务信息
@@ -35,6 +38,40 @@ type Registry interface {
 type ConsulRegistry struct {
 	client *consulapi.Client
 	config *consulapi.Config
+}
+
+// EtcdRegistry etcd注册中心实现
+type EtcdRegistry struct {
+	client   *clientv3.Client
+	leaseID  clientv3.LeaseID
+	services map[string]*ServiceInfo
+	mutex    sync.RWMutex
+	ctx      context.Context
+	cancel   context.CancelFunc
+}
+
+// NewEtcdRegistry 创建etcd注册中心
+func NewEtcdRegistry(endpoints []string) (*EtcdRegistry, error) {
+	if len(endpoints) == 0 {
+		endpoints = []string{"localhost:2379"}
+	}
+
+	client, err := clientv3.New(clientv3.Config{
+		Endpoints:   endpoints,
+		DialTimeout: 5 * time.Second,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create etcd client: %w", err)
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	return &EtcdRegistry{
+		client:   client,
+		services: make(map[string]*ServiceInfo),
+		ctx:      ctx,
+		cancel:   cancel,
+	}, nil
 }
 
 // NewConsulRegistry 创建Consul注册中心
@@ -123,6 +160,127 @@ func (c *ConsulRegistry) Close() error {
 	return nil
 }
 
+// Register 注册服务到etcd
+func (e *EtcdRegistry) Register(ctx context.Context, service *ServiceInfo) error {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	// 创建租约
+	lease, err := e.client.Grant(ctx, 30) // 30秒租约
+	if err != nil {
+		return fmt.Errorf("failed to create lease: %w", err)
+	}
+	e.leaseID = lease.ID
+
+	// 序列化服务信息
+	serviceData, err := json.Marshal(service)
+	if err != nil {
+		return fmt.Errorf("failed to marshal service: %w", err)
+	}
+
+	// 构建key
+	key := fmt.Sprintf("/services/%s/%s", service.Name, service.ID)
+
+	// 注册服务
+	_, err = e.client.Put(ctx, key, string(serviceData), clientv3.WithLease(lease.ID))
+	if err != nil {
+		return fmt.Errorf("failed to register service: %w", err)
+	}
+
+	// 保持租约
+	ch, kaerr := e.client.KeepAlive(e.ctx, lease.ID)
+	if kaerr != nil {
+		return fmt.Errorf("failed to keep alive lease: %w", kaerr)
+	}
+
+	// 启动租约续期协程
+	go func() {
+		for ka := range ch {
+			_ = ka // 忽略续期响应
+		}
+	}()
+
+	// 保存服务信息
+	e.services[service.ID] = service
+
+	return nil
+}
+
+// Deregister 从etcd注销服务
+func (e *EtcdRegistry) Deregister(ctx context.Context, serviceID string) error {
+	e.mutex.Lock()
+	defer e.mutex.Unlock()
+
+	service, exists := e.services[serviceID]
+	if !exists {
+		return fmt.Errorf("service %s not found", serviceID)
+	}
+
+	// 构建key
+	key := fmt.Sprintf("/services/%s/%s", service.Name, serviceID)
+
+	// 删除服务
+	_, err := e.client.Delete(ctx, key)
+	if err != nil {
+		return fmt.Errorf("failed to deregister service: %w", err)
+	}
+
+	// 从本地缓存删除
+	delete(e.services, serviceID)
+
+	return nil
+}
+
+// Discover 从etcd发现服务
+func (e *EtcdRegistry) Discover(ctx context.Context, serviceName string) ([]*ServiceInfo, error) {
+	key := fmt.Sprintf("/services/%s/", serviceName)
+
+	resp, err := e.client.Get(ctx, key, clientv3.WithPrefix())
+	if err != nil {
+		return nil, fmt.Errorf("failed to discover services: %w", err)
+	}
+
+	var services []*ServiceInfo
+	for _, kv := range resp.Kvs {
+		var service ServiceInfo
+		if err := json.Unmarshal(kv.Value, &service); err != nil {
+			log.Printf("Failed to unmarshal service data: %v", err)
+			continue
+		}
+		services = append(services, &service)
+	}
+
+	return services, nil
+}
+
+// HealthCheck etcd健康检查
+func (e *EtcdRegistry) HealthCheck(ctx context.Context, serviceID string) error {
+	// etcd通过租约机制自动处理健康检查
+	// 这里可以检查服务是否仍然存在
+	service, exists := e.services[serviceID]
+	if !exists {
+		return fmt.Errorf("service %s not found", serviceID)
+	}
+
+	key := fmt.Sprintf("/services/%s/%s", service.Name, serviceID)
+	resp, err := e.client.Get(ctx, key)
+	if err != nil {
+		return fmt.Errorf("failed to check service health: %w", err)
+	}
+
+	if len(resp.Kvs) == 0 {
+		return fmt.Errorf("service %s not found in etcd", serviceID)
+	}
+
+	return nil
+}
+
+// Close 关闭etcd连接
+func (e *EtcdRegistry) Close() error {
+	e.cancel()
+	return e.client.Close()
+}
+
 // MemoryRegistry 内存注册中心实现（备用方案）
 type MemoryRegistry struct {
 	services map[string]*ServiceInfo
@@ -131,19 +289,26 @@ type MemoryRegistry struct {
 	cancel   context.CancelFunc
 }
 
-// NewMemoryRegistry 创建内存注册中心
+var (
+	memoryRegistryInstance *MemoryRegistry
+	memoryRegistryOnce     sync.Once
+)
+
+// NewMemoryRegistry 创建内存注册中心（单例模式）
 func NewMemoryRegistry() *MemoryRegistry {
-	ctx, cancel := context.WithCancel(context.Background())
-	r := &MemoryRegistry{
-		services: make(map[string]*ServiceInfo),
-		ctx:      ctx,
-		cancel:   cancel,
-	}
+	memoryRegistryOnce.Do(func() {
+		ctx, cancel := context.WithCancel(context.Background())
+		memoryRegistryInstance = &MemoryRegistry{
+			services: make(map[string]*ServiceInfo),
+			ctx:      ctx,
+			cancel:   cancel,
+		}
 
-	// 启动健康检查协程
-	go r.healthCheckLoop()
+		// 启动健康检查协程
+		go memoryRegistryInstance.healthCheckLoop()
+	})
 
-	return r
+	return memoryRegistryInstance
 }
 
 // Register 注册服务
@@ -235,15 +400,28 @@ func (m *MemoryRegistry) healthCheckLoop() {
 	}
 }
 
-// NewRegistry 创建注册中心（优先使用Consul，失败则使用内存注册中心）
-func NewRegistry(consulAddress string) Registry {
-	// 尝试连接Consul
-	if consulRegistry, err := NewConsulRegistry(consulAddress); err == nil {
-		log.Println("Using Consul registry")
+// NewRegistry 创建注册中心实例
+func NewRegistry(registryType, address string) Registry {
+	switch strings.ToLower(registryType) {
+	case "etcd":
+		var endpoints []string
+		if address != "" {
+			endpoints = strings.Split(address, ",")
+		}
+		etcdRegistry, err := NewEtcdRegistry(endpoints)
+		if err != nil {
+			log.Printf("Failed to create etcd registry: %v, falling back to memory registry", err)
+			return NewMemoryRegistry()
+		}
+		return etcdRegistry
+	case "consul":
+		consulRegistry, err := NewConsulRegistry(address)
+		if err != nil {
+			log.Printf("Failed to create consul registry: %v, falling back to memory registry", err)
+			return NewMemoryRegistry()
+		}
 		return consulRegistry
+	default:
+		return NewMemoryRegistry()
 	}
-
-	// 回退到内存注册中心
-	log.Println("Using memory registry as fallback")
-	return NewMemoryRegistry()
 }

@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strconv"
+	"time"
 
 	"chain/internal/config"
+	"chain/internal/registry"
 	"chain/internal/services"
-	pb "chain/proto"
+	pb "chain/chain/proto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -20,6 +23,8 @@ type Server struct {
 	chainService *services.ChainService
 	bscService   *services.BSCService
 	config       *config.Config
+	registry     registry.Registry
+	serviceID    string
 }
 
 // NewServer 创建新的gRPC服务器
@@ -27,17 +32,26 @@ func NewServer(cfg *config.Config) *Server {
 	chainService := services.NewChainService(cfg)
 	bscService := services.NewBSCService(cfg)
 
+	// 初始化注册中心
+	reg := registry.NewRegistry(cfg.Registry.Type, cfg.Registry.Endpoints)
+
+	// 生成服务ID
+	serviceID := fmt.Sprintf("chain-grpc-%d", time.Now().Unix())
+
 	s := &Server{
 		grpcServer:   grpc.NewServer(),
 		chainService: chainService,
 		bscService:   bscService,
 		config:       cfg,
+		registry:     reg,
+		serviceID:    serviceID,
 	}
 
 	// 注册服务
 	pb.RegisterChainServiceServer(s.grpcServer, &chainServiceServer{chainService: chainService})
 	pb.RegisterBSCServiceServer(s.grpcServer, &bscServiceServer{bscService: bscService})
 	pb.RegisterHealthServiceServer(s.grpcServer, &healthServiceServer{})
+	pb.RegisterPriceServiceServer(s.grpcServer, &PriceServer{})
 
 	// 启用反射（用于调试）
 	reflection.Register(s.grpcServer)
@@ -52,12 +66,48 @@ func (s *Server) Start() error {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
 
+	// 注册服务到注册中心
+	port, _ := strconv.Atoi(s.config.Server.GRPCPort)
+	serviceInfo := &registry.ServiceInfo{
+		ID:      s.serviceID,
+		Name:    "chain-grpc",
+		Address: s.config.Server.Host,
+		Port:    port,
+		Tags:    []string{"grpc", "chain", "blockchain"},
+		Meta: map[string]string{
+			"version": "1.0.0",
+			"type":    "grpc",
+		},
+		Healthy:  true,
+		LastSeen: time.Now(),
+	}
+
+	ctx := context.Background()
+	if err := s.registry.Register(ctx, serviceInfo); err != nil {
+		log.Printf("Failed to register service: %v", err)
+	} else {
+		log.Printf("Service registered successfully with ID: %s", s.serviceID)
+	}
+
 	log.Printf("gRPC server starting on port %s", s.config.Server.GRPCPort)
 	return s.grpcServer.Serve(lis)
 }
 
 // Stop 停止gRPC服务器
 func (s *Server) Stop() {
+	// 从注册中心注销服务
+	ctx := context.Background()
+	if err := s.registry.Deregister(ctx, s.serviceID); err != nil {
+		log.Printf("Failed to deregister service: %v", err)
+	} else {
+		log.Printf("Service deregistered successfully: %s", s.serviceID)
+	}
+
+	// 关闭注册中心连接
+	if err := s.registry.Close(); err != nil {
+		log.Printf("Failed to close registry: %v", err)
+	}
+
 	s.grpcServer.GracefulStop()
 }
 
@@ -276,8 +326,6 @@ func (s *bscServiceServer) GetLiquidityPool(ctx context.Context, req *pb.GetLiqu
 			PairAddress:    pairAddress,
 			Token0:         req.Token0,
 			Token1:         req.Token1,
-			Reserve0:       "0", // 简化实现
-			Reserve1:       "0", // 简化实现
 			TotalLiquidity: totalLiquidity,
 		},
 		Success: true,
